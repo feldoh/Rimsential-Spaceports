@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
-using Verse;
-using SharpUtils;
 using UnityEngine;
-using System.Reflection;
-using Microsoft.VisualBasic.CompilerServices;
+using Verse;
 
 namespace Spaceports.Buildings
 {
@@ -17,14 +11,22 @@ namespace Spaceports.Buildings
         private int TotalProduced = 0;
         private int ProductionCache = 0;
         private int ProductionMode = 0;
+
         private int UnitsPerRareTick
         {
             get
             {
-                if(GetProductionMode() == 0) { ProductionMode = 0; return 6; }
-                else { ProductionMode = 1; return 2; }
+                if (GetProductionMode() == 0)
+                {
+                    ProductionMode = 0;
+                    return 6;
+                }
+                else
+                {
+                    ProductionMode = 1;
+                    return 2;
+                }
             }
-
         }
 
         public override void ExposeData()
@@ -40,7 +42,10 @@ namespace Spaceports.Buildings
             base.SpawnSetup(map, respawningAfterLoad);
             if (!respawningAfterLoad)
             {
-                if (!this.InWater()) { ProductionMode = 1; }
+                if (!this.InWater())
+                {
+                    ProductionMode = 1;
+                }
             }
         }
 
@@ -49,7 +54,7 @@ namespace Spaceports.Buildings
             string str = base.GetInspectString();
             str += "\n" + "Spaceports_TotalFuelProduced".Translate(TotalProduced);
             str += "\n" + "Spaceports_ProductionCache".Translate(ProductionCache);
-            if(ProductionMode == 0)
+            if (ProductionMode == 0)
             {
                 str += "\n" + "Spaceports_ModeWet".Translate();
             }
@@ -57,13 +62,14 @@ namespace Spaceports.Buildings
             {
                 str += "\n" + "Spaceports_ModeDry".Translate();
             }
+
             return str;
         }
 
         public override void Tick()
         {
             base.Tick();
-            if(Find.TickManager.TicksGame % 500 == 0)
+            if (Find.TickManager.TicksGame % 500 == 0)
             {
                 RareTick();
             }
@@ -71,7 +77,8 @@ namespace Spaceports.Buildings
 
         public void RareTick()
         {
-            if (this.GetComp<CompPowerTrader>().PowerOn) {
+            if (this.GetComp<CompPowerTrader>().PowerOn)
+            {
                 CompRefuelable FuelComp = this.GetComp<CompRefuelable>();
                 if (FuelComp != null && FuelComp.HasFuel)
                 {
@@ -79,7 +86,8 @@ namespace Spaceports.Buildings
                     TotalProduced += UPRT;
                     ProductionCache += UPRT;
                 }
-                if (!GetLinkedTanks().NullOrEmpty() && CanAnyTankAcceptFuelNow()) 
+
+                if (!GetLinkedTanks().NullOrEmpty() && CanAnyTankAcceptFuelNow())
                 {
                     TryDistributeFuel(0);
                 }
@@ -88,7 +96,7 @@ namespace Spaceports.Buildings
 
         private int GetProductionMode()
         {
-            if (!Verse.ModLister.HasActiveModWithName("Dubs Bad Hygiene"))
+            if (!ModLister.HasActiveModWithName("Dubs Bad Hygiene"))
             {
                 if (!this.InWater())
                 {
@@ -109,13 +117,18 @@ namespace Spaceports.Buildings
                 {
                     return 0;
                 }
+
                 return 1;
             }
         }
 
         private bool PullWater()
         {
-            if(!LoadedModManager.GetMod<SpaceportsMod>().GetSettings<SpaceportsSettings>().dbhEnabled) { return false; }
+            if (!LoadedModManager.GetMod<SpaceportsMod>().GetSettings<SpaceportsSettings>().dbhEnabled)
+            {
+                return false;
+            }
+
             try
             {
                 var comp = AllComps.FirstOrDefault(x => x.GetType() == SpaceportsMisc.CompPipe);
@@ -130,23 +143,24 @@ namespace Spaceports.Buildings
                 bool result = (bool)SpaceportsMisc.PullWater(PipeNet, parms);
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.ErrorOnce("[Spaceports] Error when trying to pull water from DBH PlumbingNet via reflection! Exception: " + ex.ToString(), this.thingIDNumber ^ 0x4475CF1F);
                 return false;
             }
-
         }
 
         private bool InWater()
         {
             foreach (IntVec3 cell in this.OccupiedRect())
             {
-                if (!this.Map.terrainGrid.TerrainAt(cell).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) && !this.Map.terrainGrid.TerrainAt(cell).affordances.Contains(SpaceportsDefOf.ShallowWater))
+                if (!this.Map.terrainGrid.TerrainAt(cell).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) &&
+                    !this.Map.terrainGrid.TerrainAt(cell).affordances.Contains(SpaceportsDefOf.ShallowWater))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -161,19 +175,21 @@ namespace Spaceports.Buildings
                     LinkedTanks.Add(tank);
                 }
             }
+
             return LinkedTanks;
         }
 
         private bool CanAnyTankAcceptFuelNow()
         {
             bool result = false;
-            foreach(Building_FuelTank tank in GetLinkedTanks())
+            foreach (Building_FuelTank tank in GetLinkedTanks())
             {
-                if(tank.FuelLevel() < 1000)
+                if (tank.FuelLevel() < 1000)
                 {
                     result = true;
                 }
             }
+
             return result;
         }
 
@@ -181,7 +197,7 @@ namespace Spaceports.Buildings
         {
             int DropsRemaining = drops;
             DropsRemaining += ProductionCache;
-            while(DropsRemaining > 0)
+            while (DropsRemaining > 0)
             {
                 foreach (Building_FuelTank tank in GetLinkedTanks())
                 {
@@ -190,16 +206,18 @@ namespace Spaceports.Buildings
                         tank.AddFuel(1);
                         DropsRemaining--;
                     }
-                    else if(DropsRemaining <= 0)
+                    else if (DropsRemaining <= 0)
                     {
                         break;
                     }
                 }
+
                 if (!CanAnyTankAcceptFuelNow())
                 {
                     break; //Emergency breakout to prevent game lock
                 }
             }
+
             ProductionCache = DropsRemaining;
         }
     }
@@ -210,11 +228,14 @@ namespace Spaceports.Buildings
         {
             foreach (IntVec3 item in PlaceCells(loc))
             {
-                if (!map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.Heavy) && !map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) && !map.terrainGrid.TerrainAt(item).affordances.Contains(SpaceportsDefOf.ShallowWater))
+                if (!map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.Heavy) &&
+                    !map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) &&
+                    !map.terrainGrid.TerrainAt(item).affordances.Contains(SpaceportsDefOf.ShallowWater))
                 {
                     return new AcceptanceReport("Spaceports_FFTerrain".Translate());
                 }
             }
+
             return true;
         }
 
@@ -222,9 +243,10 @@ namespace Spaceports.Buildings
         {
             foreach (IntVec3 item in PlaceCells(loc))
             {
-                if (!map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) && !map.terrainGrid.TerrainAt(item).affordances.Contains(SpaceportsDefOf.ShallowWater))
+                if (!map.terrainGrid.TerrainAt(item).affordances.Contains(TerrainAffordanceDefOf.MovingFluid) &&
+                    !map.terrainGrid.TerrainAt(item).affordances.Contains(SpaceportsDefOf.ShallowWater))
                 {
-                    if (!Verse.ModLister.HasActiveModWithName("Dubs Bad Hygiene"))
+                    if (!ModLister.HasActiveModWithName("Dubs Bad Hygiene"))
                     {
                         Messages.Message("Spaceports_DryModeWarning".Translate(), MessageTypeDefOf.CautionInput);
                     }
@@ -234,6 +256,7 @@ namespace Spaceports.Buildings
                     }
                 }
             }
+
             base.PostPlace(map, def, loc, rot);
         }
 
@@ -303,7 +326,7 @@ namespace Spaceports.Buildings
 
         public bool CanAcceptFuelNow(int amount = 0)
         {
-            if(FusionFuelLevel + amount > FuelCap)
+            if (FusionFuelLevel + amount > FuelCap)
             {
                 return false;
             }
@@ -334,7 +357,6 @@ namespace Spaceports.Buildings
         {
             FusionFuelLevel -= amount;
         }
-
     }
 
     public class Building_FuelDispenser : Building
@@ -386,15 +408,15 @@ namespace Spaceports.Buildings
             int FuelRequested = Rand.RangeInclusive(250, 750);
             List<Building_FuelTank> tanks = new List<Building_FuelTank>();
 
-            foreach(Building_FuelTank tank in this.Map.listerBuildings.AllBuildingsColonistOfClass<Building_FuelTank>())
+            foreach (Building_FuelTank tank in this.Map.listerBuildings.AllBuildingsColonistOfClass<Building_FuelTank>())
             {
-                if(tank.PowerComp.PowerNet == this.PowerComp.PowerNet)
+                if (tank.PowerComp.PowerNet == this.PowerComp.PowerNet)
                 {
                     tanks.Add(tank);
                 }
             }
 
-            foreach(Building_FuelTank tank in tanks)
+            foreach (Building_FuelTank tank in tanks)
             {
                 if (tank.CanDrainFuelNow(FuelRequested))
                 {
@@ -408,37 +430,38 @@ namespace Spaceports.Buildings
 
             List<Building_FuelTank> TankPool = new List<Building_FuelTank>();
             int PoolSize = 0;
-            foreach(Building_FuelTank tank in tanks)
+            foreach (Building_FuelTank tank in tanks)
             {
-                if(tank.FuelLevel() > 0)
+                if (tank.FuelLevel() > 0)
                 {
                     TankPool.Add(tank);
                     PoolSize += tank.FuelLevel();
-                    if(PoolSize >= FuelRequested)
+                    if (PoolSize >= FuelRequested)
                     {
                         break;
                     }
                 }
             }
 
-            if(PoolSize >= FuelRequested)
+            if (PoolSize >= FuelRequested)
             {
                 this.TotalSales += (int)(FuelRequested * 0.25f);
                 Thing silver = GenSilver((int)(FuelRequested * 0.25f));
                 GenPlace.TryPlaceThing(silver, this.InteractionCell, this.Map, ThingPlaceMode.Near);
                 foreach (Building_FuelTank tank in TankPool)
                 {
-                    if(FuelRequested >= tank.FuelLevel() && tank.CanDrainFuelNow(tank.FuelLevel()))
+                    if (FuelRequested >= tank.FuelLevel() && tank.CanDrainFuelNow(tank.FuelLevel()))
                     {
                         FuelRequested -= tank.FuelLevel();
                         tank.DrainFuel(tank.FuelLevel());
                     }
-                    else if(FuelRequested < tank.FuelLevel() && tank.CanDrainFuelNow(tank.FuelLevel() - FuelRequested))
+                    else if (FuelRequested < tank.FuelLevel() && tank.CanDrainFuelNow(tank.FuelLevel() - FuelRequested))
                     {
                         FuelRequested -= tank.FuelLevel() - FuelRequested;
                         tank.DrainFuel(tank.FuelLevel() - FuelRequested);
                     }
-                    if(FuelRequested <= 0)
+
+                    if (FuelRequested <= 0)
                     {
                         return true;
                     }

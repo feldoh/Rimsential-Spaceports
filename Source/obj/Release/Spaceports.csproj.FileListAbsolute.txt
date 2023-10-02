@@ -4,3 +4,8 @@ C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\Source\obj\Release\Spaceports.csproj.CopyComplete
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\Source\obj\Release\Spaceports.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\1.4\Assemblies\Spaceports.dll
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\1.4\Assemblies\Spaceports.dll
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Release\Spaceports.csproj.AssemblyReference.cache
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Release\Spaceports.csproj.CoreCompileInputs.cache
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Release\Spaceports.csproj.CopyComplete
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Release\Spaceports.dll

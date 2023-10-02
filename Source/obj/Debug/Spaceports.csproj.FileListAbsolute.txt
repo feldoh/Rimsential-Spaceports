@@ -6,3 +6,10 @@ C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Spaceports\Source\ob
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\Source\obj\Debug\Spaceports.csproj.AssemblyReference.cache
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\Source\obj\Debug\Spaceports.csproj.CoreCompileInputs.cache
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Rimworld-Spaceports-master\Source\obj\Debug\Spaceports.dll
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\1.4\Assemblies\Spaceports.dll
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\1.4\Assemblies\Spaceports.pdb
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Debug\Spaceports.csproj.AssemblyReference.cache
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Debug\Spaceports.csproj.CoreCompileInputs.cache
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Debug\Spaceports.csproj.CopyComplete
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Debug\Spaceports.dll
+E:\Epic\RimWorld\Mods\Rimsential - Spaceports\Source\obj\Debug\Spaceports.pdb
